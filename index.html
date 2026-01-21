@@ -1,0 +1,70 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2025 Formula 1 Rankings</title>
+  <meta name="description" content="Unofficial 2025 Formula 1 driver and constructor rankings" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="container">
+    <h1>2025 Formula 1 Rankings</h1>
+    <nav class="nav">
+      <a href="#drivers" class="active">Drivers</a>
+      <a href="#constructors">Constructors</a>
+      <a href="https://www.formula1.com/" target="_blank" rel="noopener">F1.com ↗</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section id="notice" class="notice">
+      <strong>Note:</strong> This site is a simple static page hosted on GitHub Pages. Update <code>data/standings.json</code> to refresh tables below.
+    </section>
+
+    <section id="drivers">
+      <h2>Drivers' Championship</h2>
+      <div class="table-wrap">
+        <table id="drivers-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Driver</th>
+              <th>Team</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- populated by script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="constructors">
+      <h2>Constructors' Championship</h2>
+      <div class="table-wrap">
+        <table id="constructors-table">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Constructor</th>
+              <th>Points</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- populated by script.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container foot">
+    <p>© 2026 – Unofficial F1 rankings (for personal/educational use). Data maintained by site owner.</p>
+  </footer>
+
+  <script src="assets/script.js" defer></script>
+</body>
+</html>

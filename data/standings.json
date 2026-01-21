@@ -1,0 +1,39 @@
+{
+  "drivers": [
+    {
+      "position": 1,
+      "name": "TBD",
+      "team": "TBD",
+      "points": 0
+    },
+    {
+      "position": 2,
+      "name": "TBD",
+      "team": "TBD",
+      "points": 0
+    },
+    {
+      "position": 3,
+      "name": "TBD",
+      "team": "TBD",
+      "points": 0
+    }
+  ],
+  "constructors": [
+    {
+      "position": 1,
+      "team": "TBD",
+      "points": 0
+    },
+    {
+      "position": 2,
+      "team": "TBD",
+      "points": 0
+    },
+    {
+      "position": 3,
+      "team": "TBD",
+      "points": 0
+    }
+  ]
+}
