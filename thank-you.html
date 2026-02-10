@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank You! - 2025 Formula 1 Rankings</title>
+  <meta name="description" content="Thank you for your support!" />
+  <link rel="stylesheet" href="assets/styles.css" />
+
+  <!-- UET Tag -->
+  <script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"187235020", enableAutoSpaTracking: true};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","https://bat.bing.com/bat.js","uetq");</script>
+
+  <!-- Conversion Tracking Event -->
+  <script>
+    window.addEventListener('DOMContentLoaded', function() {
+      // Check if user came from donation flow
+      const donationInitiated = sessionStorage.getItem('donation_initiated');
+      const donationAmount = sessionStorage.getItem('donation_amount');
+      
+      if (donationInitiated === 'true') {
+        // Fire conversion event
+        if (typeof window.uetq !== 'undefined') {
+          window.uetq.push('event', 'donation_complete', {
+            'revenue_value': parseFloat(donationAmount) || 5,
+            'currency': 'USD'
+          });
+          
+          // Also push as a custom conversion goal
+          window.uetq.push('event', '', {
+            'ecomm_prodid': 'donation',
+            'ecomm_pagetype': 'purchase',
+            'ecomm_totalvalue': parseFloat(donationAmount) || 5
+          });
+
+          console.log('UET Conversion tracked: $' + (donationAmount || '5'));
+        }
+        
+        // Clear session storage
+        sessionStorage.removeItem('donation_initiated');
+        sessionStorage.removeItem('donation_amount');
+      }
+    });
+  </script>
+</head>
+<body>
+  <header class="container">
+    <h1>2025 Formula 1 Rankings</h1>
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="index.html#drivers">Drivers</a>
+      <a href="index.html#constructors">Constructors</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="thank-you-section">
+      <div class="thank-you-card">
+        <div class="checkmark">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <h2>Thank You for Your Support! 🏎️</h2>
+        <p>Your contribution helps keep this F1 rankings site running and the data updated throughout the 2025 season.</p>
+        <p class="muted-text">We truly appreciate your generosity!</p>
+        
+        <div class="thank-you-actions">
+          <a href="index.html" class="btn-primary">Back to Rankings</a>
+          <a href="index.html#support" class="btn-secondary">Share with Friends</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container foot">
+    <p>© 2026 – Unofficial F1 rankings (for personal/educational use). Data maintained by site owner.</p>
+  </footer>
+</body>
+</html>
